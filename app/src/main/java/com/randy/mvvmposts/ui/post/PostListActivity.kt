@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import com.randy.mvvmposts.R
 import com.randy.mvvmposts.databinding.ActivityPostListBinding
+import com.randy.mvvmposts.injection.ViewModelFactory
 
 /**
  * @author randy
@@ -28,10 +29,10 @@ class PostListActivity : AppCompatActivity() {
         binding.postList.layoutManager =
                 LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
-        viewModel = ViewModelProviders.of(this).get(PostListViewModel::class.java)
-        viewModel.errorMessage.observe(this, Observer {
-            if (it != null) showError(it) else hideError()
-        })
+        viewModel = ViewModelProviders.of(this, ViewModelFactory(this))
+                .get(PostListViewModel::class.java)
+        viewModel.errorMessage.observe(this,
+                Observer { if (it != null) showError(it) else hideError() })
 
         binding.viewModel = viewModel
     }
