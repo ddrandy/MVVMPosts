@@ -7,6 +7,8 @@ import retrofit2.http.GET
 /**
  * @author randy
  * @since 7/10/18 4:44 PM
+ *
+ * The interface which provides methods to get result of webservices
  */
 interface PostApi {
     /**

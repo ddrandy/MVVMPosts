@@ -1,5 +1,7 @@
 package com.randy.mvvmposts.ui.post
 
+import android.arch.lifecycle.MutableLiveData
+import android.view.View
 import com.randy.mvvmposts.base.BaseViewModel
 import com.randy.mvvmposts.network.PostApi
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -17,6 +19,8 @@ class PostListViewModel : BaseViewModel() {
 
     private lateinit var subscription: Disposable
 
+    val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
+
     init {
         loadPosts()
     }
@@ -33,11 +37,11 @@ class PostListViewModel : BaseViewModel() {
     }
 
     private fun onRetrievePostListStart() {
-
+        loadingVisibility.value = View.VISIBLE
     }
 
     private fun onRetrievePostListFinish() {
-
+        loadingVisibility.value = View.GONE
     }
 
     private fun onRetrievePostListSuccess() {
@@ -46,5 +50,10 @@ class PostListViewModel : BaseViewModel() {
 
     private fun onRetrievePostListError() {
 
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        subscription.dispose()
     }
 }
