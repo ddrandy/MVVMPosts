@@ -1,11 +1,27 @@
 package com.randy.mvvmposts.base
 
 import android.arch.lifecycle.ViewModel
+import com.randy.mvvmposts.injection.component.DaggerViewModelInjector
+import com.randy.mvvmposts.injection.module.NetworkModule
+import com.randy.mvvmposts.ui.post.PostListViewModel
 
 /**
  * @author randy
  * @since 7/13/18 3:51 PM
  */
-abstract class BaseViewModel: ViewModel(){
+abstract class BaseViewModel : ViewModel() {
+    private val injector = DaggerViewModelInjector
+            .builder()
+            .networkModule(NetworkModule)
+            .build()
 
+    init {
+        inject()
+    }
+
+    private fun inject() {
+        when (this) {
+            is PostListViewModel -> injector.inject(this)
+        }
+    }
 }
