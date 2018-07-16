@@ -2,11 +2,12 @@ package com.randy.mvvmposts.ui.post
 
 import android.arch.lifecycle.MutableLiveData
 import android.view.View
+import com.randy.mvvmposts.R
 import com.randy.mvvmposts.base.BaseViewModel
+import com.randy.mvvmposts.model.Post
 import com.randy.mvvmposts.network.PostApi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -21,6 +22,10 @@ class PostListViewModel : BaseViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
     val loadingVisibility = MutableLiveData<Int>()
+    val errorMessage = MutableLiveData<Int>()
+    val errorClickListener = View.OnClickListener { loadPosts() }
+
+    val postListAdapter = PostListAdapter()
 
     init {
         loadPosts()
@@ -33,7 +38,7 @@ class PostListViewModel : BaseViewModel() {
                 .doOnSubscribe { onRetrievePostListStart() }
                 .doOnTerminate { onRetrievePostListFinish() }
                 .subscribe(
-                        { onRetrievePostListSuccess() },
+                        { onRetrievePostListSuccess(it) },
                         { onRetrievePostListError() }
                 )
         compositeDisposable.add(subscription)
@@ -41,18 +46,19 @@ class PostListViewModel : BaseViewModel() {
 
     private fun onRetrievePostListStart() {
         loadingVisibility.value = View.VISIBLE
+        errorMessage.value = null
     }
 
     private fun onRetrievePostListFinish() {
         loadingVisibility.value = View.GONE
     }
 
-    private fun onRetrievePostListSuccess() {
-
+    private fun onRetrievePostListSuccess(postList: List<Post>) {
+        postListAdapter.updatePostList(postList)
     }
 
     private fun onRetrievePostListError() {
-
+        errorMessage.value = R.string.post_error
     }
 
     override fun onCleared() {
