@@ -2,6 +2,7 @@ package com.randy.mvvmposts.injection.module
 
 import com.randy.mvvmposts.network.PostApi
 import com.randy.mvvmposts.utils.BASE_URL
+import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import io.reactivex.schedulers.Schedulers
@@ -14,7 +15,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory
  * @since 7/13/18 4:11 PM
  * Module which provides all required dependencies about network
  */
-object NetworkModule{
+@Module
+object NetworkModule {
     /**
      * Provides the Post service implementation.
      * @param retrofit the Retrofit object used to instantiate the service
@@ -26,6 +28,14 @@ object NetworkModule{
     internal fun providePostApi(retrofit: Retrofit): PostApi {
         return retrofit.create(PostApi::class.java)
     }
+
+    /**
+     * Provides the Retrofit object.
+     * @return the Retrofit object
+     */
+    @Provides
+    @Reusable
+    @JvmStatic
     internal fun provideRetrofitInterface(): Retrofit {
         return Retrofit.Builder()
                 .baseUrl(BASE_URL)

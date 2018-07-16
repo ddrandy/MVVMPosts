@@ -5,6 +5,7 @@ import android.view.View
 import com.randy.mvvmposts.base.BaseViewModel
 import com.randy.mvvmposts.network.PostApi
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -17,7 +18,7 @@ class PostListViewModel : BaseViewModel() {
     @Inject
     lateinit var postApi: PostApi
 
-    private lateinit var subscription: Disposable
+    private val compositeDisposable = CompositeDisposable()
 
     val loadingVisibility = MutableLiveData<Int>()
 
@@ -26,7 +27,7 @@ class PostListViewModel : BaseViewModel() {
     }
 
     private fun loadPosts() {
-        subscription = postApi.getPosts()
+        val subscription = postApi.getPosts()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { onRetrievePostListStart() }
@@ -35,6 +36,7 @@ class PostListViewModel : BaseViewModel() {
                         { onRetrievePostListSuccess() },
                         { onRetrievePostListError() }
                 )
+        compositeDisposable.add(subscription)
     }
 
     private fun onRetrievePostListStart() {
@@ -55,6 +57,6 @@ class PostListViewModel : BaseViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        subscription.dispose()
+        compositeDisposable.dispose()
     }
 }
