@@ -48,6 +48,8 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:$android_support_version"
     // ConstraintLayout
     implementation "com.android.support.constraint:constraint-layout:1.1.2"
+    // SupportDesign
+    implementation "com.android.support:design:$android_support_version"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
