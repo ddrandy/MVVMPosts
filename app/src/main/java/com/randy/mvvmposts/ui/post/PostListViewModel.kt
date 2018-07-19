@@ -16,7 +16,7 @@ import javax.inject.Inject
 class PostListViewModel : BaseViewModel() {
     @Inject
     lateinit var postApi: PostApi
-    private lateinit var disposable: CompositeDisposable
+    private val disposable: CompositeDisposable = CompositeDisposable()
     val loadingVisibility = MutableLiveData<Int>()
 
     init {
